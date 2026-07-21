@@ -132,7 +132,7 @@ let data=null;
 function params(){return new URLSearchParams(location.search);}
 function el(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!=null)n.textContent=x;return n;}
 function short(t){t=(t||"").trim();return t.length<=16?t:t.slice(0,15)+"…";}
-function slugify(s){return (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");}
+function slugify(s){return (s||"").normalize("NFD").replace(/\p{Diacritic}/gu,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");}
 
 /* ---- live read ---- */
 fetch(RTDB).then(r=>r.json()).then(d=>{data=d;render();}).catch(()=>{app.innerHTML='<div class="empty">Sem conexão. Tente novamente.</div>';});
