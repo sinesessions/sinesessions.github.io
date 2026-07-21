@@ -1,0 +1,693 @@
+<title>Ação Social · Sine Sessions</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0b0b0b; --panel:#151515; --panel-2:#1b1b1b; --panel-3:#222;
+    --ink:#f3f3ee; --muted:#9a9a91; --faint:#67675e;
+    --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.2);
+    --lime:#c8f000; --lime-dim:rgba(200,240,0,.13); --lime-line:rgba(200,240,0,.38);
+    --amber:#f2a71b; --red:#ff6b6b;
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px;line-height:1.6}
+  .wrap{max-width:860px;margin:0 auto;padding:0 20px}
+  h1,h2,h3{font-weight:700;letter-spacing:-.01em;text-wrap:balance;margin:0}
+  button{font-family:inherit}
+  a{color:var(--lime)}
+
+  .top{position:sticky;top:0;z-index:20;background:rgba(11,11,11,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 20px}
+  .brand{display:flex;align-items:baseline;gap:8px;font-weight:800;letter-spacing:-.02em}
+  .brand .w{color:var(--lime);font-size:20px}
+  .brand .s{color:var(--muted);font-size:13px;font-weight:600}
+  .brand .spark{color:var(--lime);font-size:12px}
+  .toolbtns{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  .tb{background:var(--panel);border:1px solid var(--line);color:var(--muted);border-radius:9px;padding:7px 11px;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+  .tb:hover{color:var(--ink);border-color:var(--line-2)}
+  .tb.part{color:#0b0b0b;background:var(--lime);border-color:var(--lime)}
+  .tb.part:hover{filter:brightness(1.08);color:#0b0b0b}
+  .sync{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);font-weight:600;white-space:nowrap}
+  .sync .dot{width:8px;height:8px;border-radius:50%;background:var(--faint);transition:background .3s}
+  .sync.ok .dot{background:var(--lime);box-shadow:0 0 6px var(--lime-line)}
+  .sync.wait .dot{background:var(--amber)}
+
+  .tabs{position:sticky;top:53px;z-index:15;background:rgba(11,11,11,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .tabs .wrap{display:flex;gap:6px;padding:10px 20px;overflow-x:auto;scrollbar-width:none}
+  .tabs .wrap::-webkit-scrollbar{display:none}
+  .tab{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:7px 15px;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:7px}
+  .tab:hover{color:var(--ink)}
+  .tab.active{background:var(--lime);border-color:var(--lime);color:#0b0b0b;font-weight:700}
+  .tab .pct{font-size:11px;opacity:.7;font-variant-numeric:tabular-nums}
+  .tab.add{color:var(--lime);border-style:dashed;border-color:var(--lime-line)}
+  .tab.add:hover{background:var(--lime-dim)}
+
+  main{padding:30px 0 90px}
+
+  [contenteditable]{outline:none;border-radius:5px;transition:box-shadow .12s,background .12s}
+  [contenteditable]:hover{background:rgba(255,255,255,.03)}
+  [contenteditable]:focus{background:rgba(200,240,0,.06);box-shadow:inset 0 -2px 0 var(--lime-line)}
+  [contenteditable]:empty:before{content:attr(data-ph);color:var(--faint);font-style:italic}
+
+  .ov-intro{margin-bottom:26px}
+  .eyebrow{text-transform:uppercase;letter-spacing:.2em;font-size:11.5px;font-weight:800;color:var(--lime);margin-bottom:8px}
+  .ov-intro h2{font-size:clamp(23px,4.4vw,30px);margin-bottom:8px}
+  .ov-intro p{color:var(--muted);margin:0;max-width:60ch}
+
+  .rhythm{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:22px 0 34px}
+  .rc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px}
+  .rc.svc{border-color:var(--lime-line);background:linear-gradient(180deg,var(--lime-dim),transparent),var(--panel)}
+  .rc .wk{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:800;margin-bottom:5px}
+  .rc h3{font-size:14.5px;line-height:1.25}
+  .rc .rd{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4}
+
+  .sec-label{display:flex;align-items:center;justify-content:space-between;margin:0 0 14px}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+  .acard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;cursor:pointer;transition:border-color .12s,transform .12s;text-align:left;color:inherit;display:flex;flex-direction:column;gap:10px;min-height:130px}
+  .acard:hover{border-color:var(--lime-line);transform:translateY(-2px)}
+  .acard .badge{align-self:flex-start;font-size:12px;font-weight:800;color:#0b0b0b;background:var(--lime);border-radius:7px;padding:3px 10px}
+  .acard.a2 .badge{background:var(--amber)}
+  .acard h3{font-size:18px}
+  .acard .obj{font-size:13px;color:var(--muted);flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .acard .prog{display:flex;align-items:center;gap:9px}
+  .bar{flex:1;height:6px;background:var(--panel-3);border-radius:99px;overflow:hidden}
+  .bar>i{display:block;height:100%;background:var(--lime);border-radius:99px;transition:width .3s}
+  .acard .pnum{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .acard.new{border-style:dashed;align-items:center;justify-content:center;text-align:center;color:var(--lime);font-weight:700;gap:6px}
+  .acard.new .plus{font-size:26px;line-height:1}
+  .acard.new small{color:var(--muted);font-weight:400;font-size:12px}
+
+  .a-head{margin-bottom:8px}
+  .a-head .row1{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+  .a-date{font-size:13.5px;font-weight:800;color:#0b0b0b;background:var(--lime);border-radius:8px;padding:5px 12px}
+  .a-title{font-size:clamp(24px,4.6vw,32px);flex:1;min-width:200px}
+  .a-meta{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:14px;margin:10px 0 4px}
+  .a-meta .m{display:flex;align-items:center;gap:6px}
+  .a-meta .ic{color:var(--lime)}
+  .a-obj{color:var(--muted);font-size:15.5px;max-width:64ch;margin:8px 0 4px}
+  .a-progline{display:flex;align-items:center;gap:11px;margin:16px 0 26px}
+  .a-progline .pnum{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+
+  .section{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:6px 6px 12px;margin-bottom:13px}
+  .s-head{display:flex;align-items:center;gap:10px;padding:11px 12px 8px}
+  .s-head .stitle{font-size:15px;font-weight:700;flex:1}
+  .s-head .kind{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:800;border:1px solid var(--line);border-radius:5px;padding:2px 6px;white-space:nowrap}
+  .icon-btn{background:none;border:none;color:var(--faint);cursor:pointer;font-size:15px;padding:4px 6px;border-radius:6px;line-height:1}
+  .icon-btn:hover{color:var(--ink);background:var(--panel-3)}
+  .icon-btn.danger:hover{color:var(--red)}
+
+  .items{display:flex;flex-direction:column}
+  .item{display:flex;align-items:flex-start;gap:11px;padding:7px 12px;border-radius:8px}
+  .item:hover{background:var(--panel-2)}
+  .item input[type=checkbox]{margin:0;width:18px;height:18px;accent-color:var(--lime);flex:none;margin-top:2px;cursor:pointer}
+  .item .txt{flex:1;font-size:14.5px}
+  .item input:checked ~ .txt{color:var(--faint);text-decoration:line-through;text-decoration-color:var(--line-2)}
+  .item .del{opacity:0;color:var(--faint);background:none;border:none;cursor:pointer;font-size:14px;padding:2px 5px;border-radius:5px;flex:none}
+  .item:hover .del{opacity:1}
+  .item .del:hover{color:var(--red);background:var(--panel-3)}
+
+  .note-body{padding:2px 12px 4px;font-size:14.5px;color:#d8d8d0;line-height:1.6;white-space:pre-wrap}
+
+  .s-add{display:flex;gap:8px;padding:6px 12px 2px}
+  .mini{background:none;border:1px dashed var(--line-2);color:var(--muted);border-radius:8px;padding:6px 11px;font-size:12.5px;cursor:pointer;font-weight:600}
+  .mini:hover{color:var(--lime);border-color:var(--lime-line)}
+
+  .add-sec{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap}
+  .add-sec .mini{border-style:solid;border-color:var(--line)}
+
+  .a-foot{display:flex;justify-content:space-between;align-items:center;margin-top:28px;padding-top:16px;border-top:1px solid var(--line);gap:12px;flex-wrap:wrap}
+  .a-foot .del-action{background:none;border:1px solid var(--line);color:var(--faint);border-radius:9px;padding:8px 13px;font-size:12.5px;cursor:pointer;font-weight:600}
+  .a-foot .del-action:hover{color:var(--red);border-color:rgba(255,107,107,.4)}
+  .a-foot .copy{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 13px;font-size:12.5px;cursor:pointer;font-weight:600}
+  .a-foot .copy:hover{border-color:var(--lime-line);color:var(--lime)}
+
+  .map-wrap{padding:4px 12px 2px}
+  .mapnote{font-size:11.5px;color:var(--faint);display:flex;align-items:center;gap:6px;margin:2px 2px 8px}
+  svg.map{width:100%;aspect-ratio:100/60;display:block;background:
+    radial-gradient(120% 120% at 50% 0%, rgba(200,240,0,.05), transparent 60%),var(--panel-2);
+    border:1px solid var(--line);border-radius:12px;touch-action:none;user-select:none}
+  svg.map .grid{stroke:rgba(255,255,255,.05);stroke-width:.3}
+  svg.map .route{fill:none;stroke:var(--lime);stroke-width:1.1;stroke-dasharray:2.6 2.2;stroke-linejoin:round;stroke-linecap:round;opacity:.9}
+  svg.map .pin circle{fill:var(--lime);stroke:#0b0b0b;stroke-width:.6;cursor:grab}
+  svg.map .pin.dragging circle{cursor:grabbing}
+  svg.map .pin text.num{fill:#0b0b0b;font-size:3.4px;font-weight:800;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+  svg.map .pin text.lbl{fill:var(--ink);font-size:2.7px;font-weight:600;text-anchor:middle;pointer-events:none;paint-order:stroke;stroke:#0b0b0b;stroke-width:.7px}
+  svg.map .compass{fill:var(--faint);font-size:3.2px;font-weight:800}
+
+  .stops{display:flex;flex-direction:column;margin-top:6px}
+  .stop{display:flex;align-items:center;gap:9px;padding:6px 12px;border-radius:8px}
+  .stop:hover{background:var(--panel-2)}
+  .stop .n{width:19px;height:19px;flex:none;border-radius:50%;background:var(--lime-dim);border:1px solid var(--lime-line);color:var(--lime);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .stop .sn{flex:1;font-size:14px}
+  .stop .mv{display:flex;flex-direction:column;gap:1px}
+  .stop .mv button{background:none;border:none;color:var(--faint);cursor:pointer;font-size:9px;line-height:1;padding:1px 3px;border-radius:3px}
+  .stop .mv button:hover{color:var(--lime);background:var(--panel-3)}
+  .stop .del{opacity:0;color:var(--faint);background:none;border:none;cursor:pointer;font-size:13px;padding:2px 5px;flex:none;border-radius:5px}
+  .stop:hover .del{opacity:1}
+  .stop .del:hover{color:var(--red);background:var(--panel-3)}
+  .route-foot{display:flex;flex-wrap:wrap;gap:9px;align-items:center;padding:8px 12px 2px;justify-content:space-between}
+  .timepill{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:600}
+  .timepill button{width:20px;height:20px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;font-size:13px;line-height:1}
+  .timepill b{color:var(--lime);font-variant-numeric:tabular-nums}
+  .gmaps{display:inline-flex;align-items:center;gap:7px;background:var(--lime);color:#0b0b0b;border:none;border-radius:9px;padding:8px 13px;font-size:12.5px;font-weight:800;cursor:pointer}
+  .gmaps:hover{filter:brightness(1.08)}
+
+  .g-block{padding:2px 12px 4px}
+  .g-sub{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:var(--faint);margin:10px 2px 4px}
+  .flow{display:flex;flex-direction:column}
+  .frow{display:flex;align-items:flex-start;gap:10px;padding:6px 2px;border-radius:8px}
+  .frow:hover{background:var(--panel-2)}
+  .frow .fn{width:20px;height:20px;flex:none;border-radius:50%;background:var(--lime);color:#0b0b0b;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .frow .ft{flex:1;font-size:14.5px}
+  .frow .del,.ddrow .del{opacity:0;color:var(--faint);background:none;border:none;cursor:pointer;font-size:13px;padding:2px 5px;flex:none;border-radius:5px}
+  .frow:hover .del,.ddrow:hover .del{opacity:1}
+  .frow .del:hover,.ddrow .del:hover{color:var(--red);background:var(--panel-3)}
+  .dd{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+  .ddcol{background:var(--panel-2);border:1px solid var(--line);border-radius:11px;padding:8px 4px 8px 8px}
+  .ddcol.evite{border-color:rgba(255,107,107,.22)}
+  .ddcol .h{font-size:12px;font-weight:800;padding:2px 4px 6px;display:flex;align-items:center;gap:6px}
+  .ddcol.faca .h{color:var(--lime)}
+  .ddcol.evite .h{color:var(--red)}
+  .ddrow{display:flex;align-items:flex-start;gap:8px;padding:4px 2px;border-radius:7px}
+  .ddrow .mk{flex:none;font-weight:800;margin-top:1px}
+  .ddcol.faca .mk{color:var(--lime)}
+  .ddcol.evite .mk{color:var(--red)}
+  .ddrow .dt{flex:1;font-size:13.5px}
+  .g-add{padding:4px 2px 0}
+
+  .savehint{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--lime);color:#0b0b0b;font-weight:700;font-size:13px;padding:8px 16px;border-radius:99px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:40}
+  .savehint.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media (max-width:640px){
+    body{font-size:16px}
+    .wrap{padding:0 15px}
+    .top .wrap{flex-wrap:wrap;gap:8px;padding:11px 15px}
+    .brand{flex:1;min-width:0}
+    .brand .s{display:none}
+    .toolbtns{gap:6px;flex-wrap:wrap;justify-content:flex-end}
+    #syncTxt{display:none}
+    .tb{padding:7px 10px;font-size:12px}
+    .tabs .wrap{padding:9px 15px}
+    main{padding:22px 0 90px}
+    .rhythm{grid-template-columns:1fr 1fr}
+    .cards{grid-template-columns:1fr}
+    .dd{grid-template-columns:1fr}
+    .section{padding:6px 4px 12px}
+    .a-title{font-size:25px}
+    .add-sec .mini{flex:1 1 44%;text-align:center}
+    .a-foot{flex-direction:column;align-items:stretch}
+    .a-foot .copy,.a-foot .del-action{text-align:center}
+  }
+</style>
+
+<div class="top"><div class="wrap">
+  <div class="brand"><span class="spark">✦</span><span class="w">sine</span><span class="s">sessions · ação social</span></div>
+  <div class="toolbtns">
+    <span class="sync" id="sync"><span class="dot"></span><span id="syncTxt">conectando…</span></span>
+    <a class="tb part" href="participar.html" target="_blank">👥 Participante</a>
+    <button class="tb" id="btnExport">↓ Exportar</button>
+    <button class="tb" id="btnImport">↑ Importar</button>
+    <button class="tb" id="btnReset">Restaurar</button>
+    <input type="file" id="fileImport" accept="application/json" hidden>
+  </div>
+</div></div>
+
+<div class="tabs"><div class="wrap" id="tabbar"></div></div>
+<main><div class="wrap" id="view"></div></main>
+<div class="savehint" id="savehint">✓ salvo</div>
+
+<script>
+"use strict";
+const KEY="sine-acao-social-v2";
+const TABKEY="sine-acao-tab";
+const RTDB="https://rifa-mae-default-rtdb.firebaseio.com/sine-acao-social/state.json";
+const SVGNS="http://www.w3.org/2000/svg";
+const uid=()=>Math.random().toString(36).slice(2,9);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+/* ---------- seed ---------- */
+function routeStops(list){
+  const n=list.length;
+  return list.map((t,i)=>({id:uid(),t,d:false,x:14+72*(n<2?0.5:i/(n-1)),y:clamp(30+16*Math.sin(i*1.25+0.4),9,51)}));
+}
+function seed(){
+  return {
+    rhythm:[
+      {wk:"Semana 1",title:"Oração e louvor",rd:"Adoração e intercessão."},
+      {wk:"Semana 2",title:"Aprofundamento bíblico",rd:"Estudo e formação."},
+      {wk:"Semana 3",title:"Ação social",rd:"Servir na prática.",svc:true},
+      {wk:"Semana 4",title:"Comunhão",rd:"Convívio e mesa. (a confirmar)"}
+    ],
+    actions:[
+      {id:uid(),accent:"lime",date:"06/08",title:"Entrega por Maringá",place:"Ruas do centro",when:"Ação: 06/08 · Montagem: qui 23/07",meet:"Casa do Sine — Av. Cerro Azul, 2836 (Jd. Novo Horizonte)",
+        obj:"Dois momentos: na quinta 23/07 montamos os kits juntos no Sine (louvor, oração e mesa); no dia 06/08 vamos às ruas levar os kits e ficar com as pessoas — ouvir e conversar, não só entregar.",
+        sections:[
+          {id:uid(),type:"note",title:"Como vai funcionar",text:"São dois momentos:\n\n1) MONTAGEM — quinta 23/07, no horário do Sine grupo, na Casa do Sine.\nLouvor e oração pelo momento → montamos os kits juntos → momento de mesa. Assim quem já vai à quinta ajuda a montar e não ficamos sem nos reunir esta semana.\n\n2) A ENTREGA (ação na rua) — 06/08.\nLevamos os kits pela cidade e ficamos com as pessoas. Os kits ficam guardados até esse dia."},
+          {id:uid(),type:"note",title:"Responsável do dia",text:"Como não estarei, alguém assume a coordenação (confere os kits, dá a orientação inicial, conduz o comboio).\nResponsável: ____________"},
+          {id:uid(),type:"list",title:"Kit — meta R$ 10/cada",items:[
+            {id:uid(),t:"Água 500 ml (ou suco) — R$ 1,50",d:false},
+            {id:uid(),t:"Lanche: barra de cereal ou biscoito — R$ 2,00",d:false},
+            {id:uid(),t:"Bombom (ex.: Sonho de Valsa) — R$ 1,00",d:false},
+            {id:uid(),t:"Higiene: sabonete + escova e pasta — R$ 2,50",d:false},
+            {id:uid(),t:"Par de meias (inverno) — R$ 2,50",d:false},
+            {id:uid(),t:"Cartãozinho com mensagem/versículo — R$ 0,50",d:false}
+          ]},
+          {id:uid(),type:"note",title:"Onde comprar mais barato · Maringá",text:"Sempre peça desconto ou doação dizendo que é ação social da igreja (leve algo que comprove).\n\nATACADOS — tudo num lugar (água, lanche, higiene, meias):\n• Assaí Atacadista — R. Rubens Sebastião Marin, 1820 (Pq. Industrial)\n• Atacadão — Av. Colombo, 67 (Vila Nova)\n• Max Atacadista — Av. Colombo, 2720\n• Camilo Atacadista — variedades, higiene e meias\n\nBOMBONS (Sonho de Valsa) — atacado de doces, bem mais barato:\n• Marimel Distribuidora — (44) 3026-6593\n• Doces e Festas Alvorada — Av. Pedro Taques, 2457 — (44) 3229-5469\n• Docelândia — (44) 3263-4235\n\nÁGUA / SUCO — distribuidora de bebidas (preço por fardo):\n• Distribuidora Gávea — Av. Guedner, 2495\n• Ponto Beer — Av. Colombo, 7578\n\nHIGIENE (sabonete + kit dental de viagem) e MEIAS:\n• Nos próprios atacados acima ou lojas de R$ 1,99 do centro\n• Meias baratas: atacado de vestuário / camelô do centro\n\nDica: bombom no atacado de doces e água na distribuidora saem bem abaixo do mercado. Confirme endereços e telefones antes de ir."},
+          {id:uid(),type:"list",title:"Arrecadação (R$ 10/kit)",items:[
+            {id:uid(),t:"Definir meta de kits e divulgar no grupo",d:false},
+            {id:uid(),t:"Abrir vaquinha (Pix/dinheiro) · prazo qua 22/07",d:false},
+            {id:uid(),t:"Fechar valor e nº final de kits",d:false}
+          ]},
+          {id:uid(),type:"route",title:"Rota — arraste os pontos e confirme antes",city:"Maringá, PR",minPer:15,
+            items:routeStops(["Praça da Catedral","Terminal Urbano","Av. Brasil (centro)","Praça Napoleão Moreira","Novo Centro","Sob viadutos / marquises"])},
+          {id:uid(),type:"list",title:"Antes da montagem (até qua 22/07)",items:[
+            {id:uid(),t:"Comprar os itens",d:false},
+            {id:uid(),t:"Escrever os cartõezinhos à mão",d:false},
+            {id:uid(),t:"Confirmar quem traz o quê para a quinta",d:false},
+            {id:uid(),t:"Levar tudo para a Casa do Sine na quinta",d:false}
+          ]},
+          {id:uid(),type:"list",title:"Montagem · quinta 23/07 (no Sine)",items:[
+            {id:uid(),t:"Louvor e oração pelo momento",d:false},
+            {id:uid(),t:"Montar os kits juntos",d:false},
+            {id:uid(),t:"Conferir e guardar os kits até o dia da ação",d:false},
+            {id:uid(),t:"Momento de mesa / partilha",d:false}
+          ]},
+          guideEntrega(),
+          {id:uid(),type:"list",title:"Dia da ação · 06/08",items:[
+            {id:uid(),t:"Confirmar carros e motoristas do comboio",d:false},
+            {id:uid(),t:"Validar a rota e o tempo de cada parada",d:false},
+            {id:uid(),t:"Ponto de encontro: Casa do Sine (Av. Cerro Azul, 2836) às ___h",d:false},
+            {id:uid(),t:"Orientação inicial + oração (5 min)",d:false},
+            {id:uid(),t:"Pegar os kits guardados e dividir por carro",d:false},
+            {id:uid(),t:"Comboio junto — todos em cada parada (15–20 min)",d:false},
+            {id:uid(),t:"Registrar (fotos com respeito)",d:false},
+            {id:uid(),t:"Fechamento: oração e agradecimento",d:false}
+          ]}
+        ]},
+      {id:uid(),accent:"amber",date:"08/08",title:"Casa do Voluntariado",place:"Casa do Voluntariado",when:"Sexta",
+        obj:"O local precisa de roupas (principalmente masculinas e infantis). Arrecadar desde já, passar as peças e entregar todos juntos. Bazar beneficente em paralelo.",
+        sections:[
+          {id:uid(),type:"list",title:"Arrecadação de roupas — começar já",items:[
+            {id:uid(),t:"Anunciar campanha: foco masculino e infantil, bom estado",d:false},
+            {id:uid(),t:"Definir ponto(s) de coleta e prazo (até 06/08)",d:false},
+            {id:uid(),t:"Combinar quem recebe e guarda as peças",d:false},
+            {id:uid(),t:"Separar as peças que precisam ser passadas/lavadas",d:false}
+          ]},
+          {id:uid(),type:"list",title:"Visita 01/08 · 9h",items:[
+            {id:uid(),t:"Confirmar endereço e horário com a casa",d:false},
+            {id:uid(),t:"Perguntar necessidade exata: tamanhos e prioridades",d:false},
+            {id:uid(),t:"Entender como querem apoio para o bazar",d:false},
+            {id:uid(),t:"Buscar as roupas para passar e trazer",d:false}
+          ]},
+          {id:uid(),type:"list",title:"Dia da entrega · 08/08",items:[
+            {id:uid(),t:"Mutirão para passar as roupas",d:false},
+            {id:uid(),t:"Separar doações por tipo e tamanho",d:false},
+            {id:uid(),t:"Entregar tudo na casa, todos juntos",d:false},
+            {id:uid(),t:"Registrar e agradecer os doadores",d:false}
+          ]},
+          {id:uid(),type:"note",title:"Bazar beneficente — em paralelo",text:"É contínuo, não precisa estar pronto para 08/08. Na visita do dia 01/08, entenda o que a casa espera (peças para vender? ajuda para montar? divulgação?) e vá construindo aos poucos com o grupo."}
+        ]}
+    ]
+  };
+}
+function guideEntrega(){
+  return {id:uid(),type:"guide",title:"Orientação do dia",
+    flow:[
+      {id:uid(),t:"Chegada e roda: acolhida, avisos e oração (5 min)."},
+      {id:uid(),t:"Conferir os kits e dividir por carro e por dupla."},
+      {id:uid(),t:"Revisar a rota e o tempo de cada parada."},
+      {id:uid(),t:"Seguir em comboio — todos descem juntos em cada ponto."},
+      {id:uid(),t:"Em cada parada (15–20 min): abordar, oferecer o kit, conversar, ouvir, orar se a pessoa quiser."},
+      {id:uid(),t:"Encerramento: reunir o grupo, oração final, agradecimento e partilha."}
+    ],
+    faca:[
+      {id:uid(),t:"Cumprimente com calma, pergunte o nome e se pode oferecer o kit."},
+      {id:uid(),t:"Fique na altura da pessoa (agache) e olhe nos olhos."},
+      {id:uid(),t:"Ouça mais do que fale; pergunte como está e do que precisa."},
+      {id:uid(),t:"Ofereça oração — só se a pessoa aceitar."},
+      {id:uid(),t:"Ande sempre em dupla ou em grupo."},
+      {id:uid(),t:"Respeite quem não quiser conversa ou o kit."}
+    ],
+    evite:[
+      {id:uid(),t:"Tirar fotos sem permissão."},
+      {id:uid(),t:"Dar dinheiro."},
+      {id:uid(),t:"Prometer o que não pode cumprir."},
+      {id:uid(),t:"Forçar pregação ou julgar a pessoa."},
+      {id:uid(),t:"Se afastar sozinho do grupo."},
+      {id:uid(),t:"Acordar de forma brusca quem estiver dormindo."}
+    ]
+  };
+}
+function guideBlank(){
+  return {id:uid(),type:"guide",title:"Orientação do dia",
+    flow:[{id:uid(),t:"Chegada, avisos e oração."},{id:uid(),t:"Dividir as equipes e tarefas."},{id:uid(),t:"Ação (o essencial: ouvir e acolher)."},{id:uid(),t:"Encerramento, oração e agradecimento."}],
+    faca:[{id:uid(),t:"Trate cada pessoa pelo nome, com calma."},{id:uid(),t:"Ouça mais do que fale."}],
+    evite:[{id:uid(),t:"Tirar fotos sem permissão."},{id:uid(),t:"Prometer o que não pode cumprir."}]
+  };
+}
+function templateAction(){
+  return {id:uid(),accent:"lime",date:"",title:"Nova ação",place:"",when:"",obj:"",
+    sections:[
+      {id:uid(),type:"note",title:"1 · Definir a ação",text:"O quê, onde, quando e por quê. Qual o público, a necessidade real e o objetivo do encontro."},
+      {id:uid(),type:"note",title:"2 · Levantar a necessidade",text:"Conversar com o local ou com quem conhece o público antes de decidir."},
+      {id:uid(),type:"list",title:"3 · Arrecadação",items:[{id:uid(),t:"Definir o que arrecadar, meta e prazo",d:false},{id:uid(),t:"Definir quem recolhe e onde guarda",d:false},{id:uid(),t:"Divulgar no grupo",d:false}]},
+      {id:uid(),type:"list",title:"4 · Logística",items:[{id:uid(),t:"Compras (o quê, quem, onde)",d:false},{id:uid(),t:"Montagem / preparo",d:false},{id:uid(),t:"Transporte e ponto de encontro",d:false}]},
+      {id:uid(),type:"list",title:"5 · Papéis",items:[{id:uid(),t:"Responsável geral: ____",d:false},{id:uid(),t:"Compras: ____",d:false},{id:uid(),t:"Registro/fotos: ____",d:false}]},
+      guideBlank(),
+      {id:uid(),type:"list",title:"7 · Fechar e registrar",items:[{id:uid(),t:"Agradecer quem participou e doou",d:false},{id:uid(),t:"Registrar quantos foram alcançados",d:false},{id:uid(),t:"Partilhar um breve testemunho",d:false}]}
+    ]
+  };
+}
+
+/* ---------- state ---------- */
+let state, activeTab;
+try{ const c=JSON.parse(localStorage.getItem(KEY)); if(c&&c.actions) state=c; }catch(e){}
+if(!state) state=seed();
+migrate(state);
+activeTab=localStorage.getItem(TABKEY)||"overview";
+
+function migrate(st){
+  (st.actions||[]).forEach(a=>(a.sections||[]).forEach(s=>{
+    if(s.type==="list" && /rota/i.test(s.title||"") && s.items){
+      s.type="route"; s.city=s.city||"Maringá, PR"; s.minPer=s.minPer||15;
+      const n=s.items.length;
+      s.items.forEach((it,i)=>{ if(typeof it.x!=="number"){it.x=14+72*(n<2?0.5:i/(n-1));it.y=clamp(30+16*Math.sin(i*1.25+0.4),9,51);} });
+    }
+  }));
+}
+
+/* ---------- sync (firebase RTDB, no SDK) ---------- */
+let pushTimer,lastPushJSON="",pendingRemote=null,gotFirst=false;
+function setSync(cls,txt){const s=document.getElementById("sync");s.className="sync "+cls;document.getElementById("syncTxt").textContent=txt;}
+function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(state));localStorage.setItem(TABKEY,activeTab);}catch(e){}}
+function pushRemote(){
+  const body=JSON.stringify(state);lastPushJSON=body;setSync("wait","salvando…");
+  fetch(RTDB,{method:"PUT",headers:{"Content-Type":"application/json"},body})
+    .then(()=>setSync("ok","sincronizado")).catch(()=>setSync("wait","offline (salvo local)"));
+}
+let hintTimer;
+function flashHint(){const h=document.getElementById("savehint");h.classList.add("show");clearTimeout(hintTimer);hintTimer=setTimeout(()=>h.classList.remove("show"),900);}
+function save(showHint){ saveLocal(); if(showHint)flashHint(); clearTimeout(pushTimer); pushTimer=setTimeout(pushRemote,500); }
+const debSave=()=>{clearTimeout(pushTimer);pushTimer=setTimeout(()=>{saveLocal();pushRemote();},600);flashHint();};
+
+function isEditing(){const a=document.activeElement;return a&&a.isContentEditable;}
+function applyRemote(data){
+  if(!data||!data.actions)return;
+  const incoming=JSON.stringify(data);
+  if(incoming===JSON.stringify(state))return;
+  if(incoming===lastPushJSON)return;
+  if(isEditing()){pendingRemote=data;return;}
+  state=data;migrate(state);saveLocal();render();
+}
+document.addEventListener("focusout",()=>{setTimeout(()=>{if(pendingRemote&&!isEditing()){const d=pendingRemote;pendingRemote=null;applyRemote(d);}},80);},true);
+
+function initSync(){
+  fetch(RTDB).then(r=>r.json()).then(d=>{
+    gotFirst=true;
+    if(d&&d.actions){applyRemote(d);setSync("ok","sincronizado");}
+    else{pushRemote();}
+    stream();
+  }).catch(()=>{setSync("wait","offline (salvo local)");stream();});
+}
+function stream(){
+  try{
+    const es=new EventSource(RTDB);
+    es.addEventListener("put",ev=>onStream(ev));
+    es.addEventListener("patch",ev=>onStream(ev));
+    es.onopen=()=>{if(gotFirst)setSync("ok","sincronizado");};
+    es.onerror=()=>{setSync("wait","reconectando…");};
+  }catch(e){}
+}
+function onStream(ev){
+  let msg;try{msg=JSON.parse(ev.data);}catch(e){return;}
+  if(!msg)return;
+  if(msg.path==="/"&&msg.data&&msg.data.actions){applyRemote(msg.data);}
+  else{ fetch(RTDB).then(r=>r.json()).then(d=>applyRemote(d)).catch(()=>{}); }
+}
+
+/* ---------- helpers ---------- */
+function el(tag,cls,txt){const n=document.createElement(tag);if(cls)n.className=cls;if(txt!=null)n.textContent=txt;return n;}
+function editable(node,obj,key,ph,oneline){
+  node.contentEditable="true";node.spellcheck=false;node.textContent=obj[key]||"";if(ph)node.dataset.ph=ph;
+  node.addEventListener("input",()=>{obj[key]=node.innerText;debSave();});
+  if(oneline)node.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();node.blur();}});
+  return node;
+}
+function progress(a){let t=0,d=0;a.sections.forEach(s=>{if((s.type==="list"||s.type==="route")&&s.items)s.items.forEach(i=>{t++;if(i.d)d++;});});return {t,d,pct:t?Math.round(d/t*100):0};}
+
+/* ---------- tabs ---------- */
+function renderTabs(){
+  const bar=document.getElementById("tabbar");bar.innerHTML="";
+  const ov=el("button","tab"+(activeTab==="overview"?" active":""),"Todas as ações");
+  ov.onclick=()=>{activeTab="overview";saveLocal();render();};bar.appendChild(ov);
+  state.actions.forEach(a=>{
+    const p=progress(a);const t=el("button","tab"+(activeTab===a.id?" active":""));
+    t.appendChild(el("span",null,a.title||"Sem título"));
+    if(p.t)t.appendChild(el("span","pct",p.pct+"%"));
+    t.onclick=()=>{activeTab=a.id;saveLocal();render();};bar.appendChild(t);
+  });
+  const add=el("button","tab add","＋ Nova ação");add.onclick=addAction;bar.appendChild(add);
+}
+
+/* ---------- overview ---------- */
+function renderOverview(v){
+  const intro=el("div","ov-intro");
+  intro.appendChild(el("div","eyebrow","Sine Sessions · guia"));
+  intro.appendChild(el("h2","","Ação social do grupo"));
+  intro.appendChild(el("p","","Modelo reutilizável e o passo a passo de cada mês. Tudo é editável e sincronizado ao vivo com a equipe. A página do participante (botão no topo) mostra a versão de quem vai participar."));
+  v.appendChild(intro);
+  const rh=el("div","rhythm");
+  state.rhythm.forEach(r=>{
+    const c=el("div","rc"+(r.svc?" svc":""));
+    c.appendChild(el("div","wk",r.wk));
+    c.appendChild(editable(el("h3"),r,"title","Tema",null,true));
+    c.appendChild(editable(el("div","rd"),r,"rd","descrição"));
+    rh.appendChild(c);
+  });
+  v.appendChild(rh);
+  const lab=el("div","sec-label");lab.appendChild(el("div","eyebrow","As ações"));v.appendChild(lab);
+  const cards=el("div","cards");
+  state.actions.forEach(a=>{
+    const p=progress(a);const c=el("button","acard"+(a.accent==="amber"?" a2":""));
+    c.appendChild(el("span","badge",a.date||"data"));
+    c.appendChild(el("h3","",a.title||"Sem título"));
+    c.appendChild(el("div","obj",a.obj||""));
+    const pr=el("div","prog");const bar=el("div","bar");const fill=el("i");fill.style.width=p.pct+"%";bar.appendChild(fill);
+    pr.appendChild(bar);pr.appendChild(el("span","pnum",p.d+"/"+p.t));c.appendChild(pr);
+    c.onclick=()=>{activeTab=a.id;saveLocal();render();};cards.appendChild(c);
+  });
+  const nw=el("button","acard new");
+  nw.appendChild(el("div","plus","＋"));nw.appendChild(el("div","","Nova ação"));nw.appendChild(el("small","","a partir do modelo de 7 passos"));
+  nw.onclick=addAction;cards.appendChild(nw);
+  v.appendChild(cards);
+}
+
+/* ---------- action ---------- */
+function renderAction(v,a){
+  const head=el("div","a-head");
+  const row1=el("div","row1");
+  row1.appendChild(editable(el("div","a-date"),a,"date","data",null,true));
+  row1.appendChild(editable(el("h1","a-title"),a,"title","Título da ação",null,true));
+  head.appendChild(row1);
+  const meta=el("div","a-meta");
+  const m1=el("div","m");m1.appendChild(el("span","ic","📍"));m1.appendChild(editable(el("span"),a,"place","local",null,true));meta.appendChild(m1);
+  const m2=el("div","m");m2.appendChild(el("span","ic","🗓"));m2.appendChild(editable(el("span"),a,"when","quando",null,true));meta.appendChild(m2);
+  const m3=el("div","m");m3.appendChild(el("span","ic","🚩"));m3.appendChild(editable(el("span"),a,"meet","ponto de encontro",null,true));meta.appendChild(m3);
+  head.appendChild(meta);
+  head.appendChild(editable(el("div","a-obj"),a,"obj","Objetivo da ação — o quê e por quê"));
+  v.appendChild(head);
+  const p=progress(a);const pl=el("div","a-progline");
+  const bar=el("div","bar");const fill=el("i");fill.style.width=p.pct+"%";bar.appendChild(fill);
+  pl.appendChild(bar);pl.appendChild(el("span","pnum",p.d+" de "+p.t+" · "+p.pct+"%"));v.appendChild(pl);
+  a.sections.forEach(s=>v.appendChild(renderSection(a,s)));
+  const addsec=el("div","add-sec");
+  addsec.appendChild(mkBtn("＋ Lista",()=>{a.sections.push({id:uid(),type:"list",title:"Nova lista",items:[{id:uid(),t:"",d:false}]});save();render();}));
+  addsec.appendChild(mkBtn("＋ Nota",()=>{a.sections.push({id:uid(),type:"note",title:"Nova nota",text:""});save();render();}));
+  addsec.appendChild(mkBtn("＋ Rota (mapa)",()=>{a.sections.push({id:uid(),type:"route",title:"Rota",city:"Maringá, PR",minPer:15,items:routeStops(["Ponto 1","Ponto 2","Ponto 3"])});save();render();}));
+  addsec.appendChild(mkBtn("＋ Orientação",()=>{a.sections.push(guideBlank());save();render();}));
+  v.appendChild(addsec);
+  const foot=el("div","a-foot");
+  const cp=el("button","copy","⧉ Copiar resumo");cp.onclick=()=>copyAction(a,cp);
+  const del=el("button","del-action","Excluir esta ação");
+  del.onclick=()=>{if(confirm("Excluir a ação \""+(a.title||"")+"\"? Isso remove para todos.")){state.actions=state.actions.filter(x=>x!==a);activeTab="overview";save();render();}};
+  foot.appendChild(cp);foot.appendChild(del);v.appendChild(foot);
+}
+function mkBtn(txt,fn){const b=el("button","mini",txt);b.onclick=fn;return b;}
+
+function renderSection(a,s){
+  const sec=el("div","section");
+  const head=el("div","s-head");
+  head.appendChild(editable(el("div","stitle"),s,"title","Título da seção",null,true));
+  const kinds={list:"Lista",note:"Nota",route:"Rota",guide:"Roteiro"};
+  head.appendChild(el("span","kind",kinds[s.type]||""));
+  const rm=el("button","icon-btn danger","✕");rm.title="Excluir seção";
+  rm.onclick=()=>{if(confirm("Excluir esta seção?")){a.sections=a.sections.filter(x=>x!==s);save();render();}};
+  head.appendChild(rm);sec.appendChild(head);
+  if(s.type==="list")renderList(a,s,sec);
+  else if(s.type==="route")renderRoute(a,s,sec);
+  else if(s.type==="guide")renderGuide(a,s,sec);
+  else sec.appendChild(editable(el("div","note-body"),s,"text","Escreva aqui…"));
+  return sec;
+}
+function renderList(a,s,sec){
+  const list=el("div","items");
+  s.items.forEach(it=>list.appendChild(renderItem(a,s,it)));
+  sec.appendChild(list);
+  const add=el("div","s-add");
+  add.appendChild(mkBtn("＋ item",()=>{const ni={id:uid(),t:"",d:false};s.items.push(ni);save();const row=renderItem(a,s,ni);list.appendChild(row);row.querySelector(".txt").focus();updateProgress(a);}));
+  sec.appendChild(add);
+}
+function renderItem(a,s,it){
+  const row=el("div","item");
+  const cb=el("input");cb.type="checkbox";cb.checked=!!it.d;
+  cb.onchange=()=>{it.d=cb.checked;save(true);updateProgress(a);};
+  const tx=editable(el("div","txt"),it,"t","Nova tarefa…");
+  tx.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){e.preventDefault();const ni={id:uid(),t:"",d:false};s.items.splice(s.items.indexOf(it)+1,0,ni);save();render();}
+    if(e.key==="Backspace"&&it.t===""&&s.items.length>1){e.preventDefault();s.items=s.items.filter(x=>x!==it);save();render();}
+  });
+  const del=el("button","del","✕");del.onclick=()=>{s.items=s.items.filter(x=>x!==it);save();row.remove();updateProgress(a);};
+  row.appendChild(cb);row.appendChild(tx);row.appendChild(del);return row;
+}
+
+function renderRoute(a,s,sec){
+  const mw=el("div","map-wrap");
+  const note=el("div","mapnote");note.textContent="✦ Esquema — arraste os pontos para posicionar como na cidade. Confirme os locais antes do dia.";
+  mw.appendChild(note);
+  const svg=document.createElementNS(SVGNS,"svg");svg.setAttribute("class","map");svg.setAttribute("viewBox","0 0 100 60");
+  for(let gx=10;gx<100;gx+=10){const l=document.createElementNS(SVGNS,"line");l.setAttribute("class","grid");l.setAttribute("x1",gx);l.setAttribute("y1",0);l.setAttribute("x2",gx);l.setAttribute("y2",60);svg.appendChild(l);}
+  for(let gy=10;gy<60;gy+=10){const l=document.createElementNS(SVGNS,"line");l.setAttribute("class","grid");l.setAttribute("x1",0);l.setAttribute("y1",gy);l.setAttribute("x2",100);l.setAttribute("y2",gy);svg.appendChild(l);}
+  const comp=document.createElementNS(SVGNS,"text");comp.setAttribute("class","compass");comp.setAttribute("x",94);comp.setAttribute("y",7);comp.textContent="N↑";svg.appendChild(comp);
+  const route=document.createElementNS(SVGNS,"polyline");route.setAttribute("class","route");svg.appendChild(route);
+  const pins=[];
+  s.items.forEach((it,i)=>{
+    const g=document.createElementNS(SVGNS,"g");g.setAttribute("class","pin");
+    const c=document.createElementNS(SVGNS,"circle");c.setAttribute("r",3.6);g.appendChild(c);
+    const num=document.createElementNS(SVGNS,"text");num.setAttribute("class","num");num.textContent=(i+1);g.appendChild(num);
+    const lbl=document.createElementNS(SVGNS,"text");lbl.setAttribute("class","lbl");lbl.textContent=shortLabel(it.t);g.appendChild(lbl);
+    svg.appendChild(g);pins.push({c,num,lbl,it});startDrag(g,svg,it,()=>updateMap());
+  });
+  function updateMap(){
+    route.setAttribute("points",s.items.map(it=>it.x+","+it.y).join(" "));
+    pins.forEach(p=>{p.c.setAttribute("cx",p.it.x);p.c.setAttribute("cy",p.it.y);p.num.setAttribute("x",p.it.x);p.num.setAttribute("y",p.it.y);p.lbl.setAttribute("x",p.it.x);p.lbl.setAttribute("y",p.it.y-4.4);p.lbl.textContent=shortLabel(p.it.t);});
+  }
+  updateMap();mw.appendChild(svg);sec.appendChild(mw);
+  const stops=el("div","stops");
+  s.items.forEach((it,i)=>{
+    const row=el("div","stop");row.appendChild(el("div","n",i+1));
+    row.appendChild(editable(el("div","sn"),it,"t","Nome do ponto",null,true));
+    const mv=el("div","mv");
+    const up=el("button",null,"▲");up.onclick=()=>{if(i>0){const t=s.items[i-1];s.items[i-1]=it;s.items[i]=t;save();render();}};
+    const dn=el("button",null,"▼");dn.onclick=()=>{if(i<s.items.length-1){const t=s.items[i+1];s.items[i+1]=it;s.items[i]=t;save();render();}};
+    mv.appendChild(up);mv.appendChild(dn);row.appendChild(mv);
+    const del=el("button","del","✕");del.onclick=()=>{s.items=s.items.filter(x=>x!==it);save();render();};
+    row.appendChild(del);stops.appendChild(row);
+  });
+  sec.appendChild(stops);
+  const add=el("div","s-add");
+  add.appendChild(mkBtn("＋ ponto",()=>{const n=s.items.length;s.items.push({id:uid(),t:"",d:false,x:clamp(14+72*(n?n/(n+1):.5),6,94),y:clamp(30+16*Math.sin(n*1.25+0.4),9,51)});save();render();}));
+  sec.appendChild(add);
+  const foot=el("div","route-foot");
+  const time=el("div","timepill");const minus=el("button",null,"−");const plus=el("button",null,"＋");const tot=el("b",null,"");
+  const paint=()=>{const per=s.minPer||15;tot.textContent=per+" min/parada · total ≈ "+(per*s.items.length)+" min";};
+  minus.onclick=()=>{s.minPer=Math.max(5,(s.minPer||15)-5);save();paint();};
+  plus.onclick=()=>{s.minPer=(s.minPer||15)+5;save();paint();};
+  time.appendChild(minus);time.appendChild(tot);time.appendChild(plus);paint();foot.appendChild(time);
+  const gm=el("button","gmaps","🧭 Abrir no Google Maps");
+  gm.onclick=()=>{const pts=s.items.map(it=>it.t).filter(Boolean).map(n=>encodeURIComponent(n+", "+(s.city||"Maringá, PR")));if(pts.length)window.open("https://www.google.com/maps/dir/"+pts.join("/"),"_blank");};
+  foot.appendChild(gm);sec.appendChild(foot);
+}
+function shortLabel(t){t=(t||"").trim();return t.length<=16?t:t.slice(0,15)+"…";}
+function startDrag(g,svg,it,onmove){
+  let dragging=false;
+  const pt=e=>{const r=svg.getBoundingClientRect();return {x:clamp((e.clientX-r.left)/r.width*100,4,96),y:clamp((e.clientY-r.top)/r.height*60,5,55)};};
+  g.addEventListener("pointerdown",e=>{dragging=true;g.classList.add("dragging");g.setPointerCapture&&g.setPointerCapture(e.pointerId);e.preventDefault();});
+  g.addEventListener("pointermove",e=>{if(!dragging)return;const p=pt(e);it.x=p.x;it.y=p.y;onmove();});
+  const up=()=>{if(!dragging)return;dragging=false;g.classList.remove("dragging");save();};
+  g.addEventListener("pointerup",up);g.addEventListener("pointercancel",up);
+}
+
+function renderGuide(a,s,sec){
+  const blk=el("div","g-block");
+  blk.appendChild(el("div","g-sub","Roteiro do dia"));
+  const flow=el("div","flow");s.flow=s.flow||[];
+  s.flow.forEach((it,i)=>{
+    const row=el("div","frow");row.appendChild(el("div","fn",i+1));
+    const tx=editable(el("div","ft"),it,"t","Passo do roteiro…");
+    tx.addEventListener("keydown",e=>{
+      if(e.key==="Enter"){e.preventDefault();s.flow.splice(s.flow.indexOf(it)+1,0,{id:uid(),t:""});save();render();}
+      if(e.key==="Backspace"&&it.t===""&&s.flow.length>1){e.preventDefault();s.flow=s.flow.filter(x=>x!==it);save();render();}
+    });
+    row.appendChild(tx);const del=el("button","del","✕");del.onclick=()=>{s.flow=s.flow.filter(x=>x!==it);save();render();};
+    row.appendChild(del);flow.appendChild(row);
+  });
+  blk.appendChild(flow);
+  const addf=el("div","g-add");addf.appendChild(mkBtn("＋ passo",()=>{s.flow.push({id:uid(),t:""});save();render();}));blk.appendChild(addf);
+  const dd=el("div","dd");dd.appendChild(ddCol(s,"faca","✓ Faça","✓"));dd.appendChild(ddCol(s,"evite","✕ Evite","✕"));blk.appendChild(dd);
+  sec.appendChild(blk);
+}
+function ddCol(s,key,label,mark){
+  s[key]=s[key]||[];const col=el("div","ddcol "+key);col.appendChild(el("div","h",label));
+  s[key].forEach(it=>{
+    const row=el("div","ddrow");row.appendChild(el("div","mk",mark));
+    const tx=editable(el("div","dt"),it,"t","…");
+    tx.addEventListener("keydown",e=>{
+      if(e.key==="Enter"){e.preventDefault();s[key].splice(s[key].indexOf(it)+1,0,{id:uid(),t:""});save();render();}
+      if(e.key==="Backspace"&&it.t===""&&s[key].length>1){e.preventDefault();s[key]=s[key].filter(x=>x!==it);save();render();}
+    });
+    row.appendChild(tx);const del=el("button","del","✕");del.onclick=()=>{s[key]=s[key].filter(x=>x!==it);save();render();};
+    row.appendChild(del);col.appendChild(row);
+  });
+  const add=el("div","g-add");add.appendChild(mkBtn("＋",()=>{s[key].push({id:uid(),t:""});save();render();}));col.appendChild(add);
+  return col;
+}
+
+function updateProgress(a){
+  const p=progress(a);
+  document.querySelectorAll(".a-progline .bar>i").forEach(f=>f.style.width=p.pct+"%");
+  document.querySelectorAll(".a-progline .pnum").forEach(n=>n.textContent=p.d+" de "+p.t+" · "+p.pct+"%");
+  renderTabs();
+}
+function addAction(){const a=templateAction();state.actions.push(a);activeTab=a.id;save();render();const t=document.querySelector(".a-title");if(t){t.focus();try{getSelection().selectAllChildren(t);}catch(e){}}}
+
+function copyAction(a,btn){
+  let out="✦ "+(a.title||"")+"  ("+(a.date||"")+")\n";
+  if(a.obj)out+=a.obj+"\n";
+  a.sections.forEach(s=>{
+    out+="\n▸ "+(s.title||"")+"\n";
+    if(s.type==="list")s.items.forEach(i=>out+="  "+(i.d?"☑":"☐")+" "+i.t+"\n");
+    else if(s.type==="route"){s.items.forEach((i,ix)=>out+="  "+(ix+1)+". "+i.t+"\n");out+="  ⏱ "+(s.minPer||15)+" min/parada\n";}
+    else if(s.type==="guide"){(s.flow||[]).forEach((i,ix)=>out+="  "+(ix+1)+". "+i.t+"\n");out+="  ✓ Faça:\n";(s.faca||[]).forEach(i=>out+="   - "+i.t+"\n");out+="  ✕ Evite:\n";(s.evite||[]).forEach(i=>out+="   - "+i.t+"\n");}
+    else out+="  "+(s.text||"")+"\n";
+  });
+  const done=()=>{const o=btn.textContent;btn.textContent="✓ copiado";setTimeout(()=>btn.textContent=o,1400);};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(out).then(done,()=>fallbackCopy(out,done));else fallbackCopy(out,done);
+}
+function fallbackCopy(txt,done){const ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");}catch(e){}ta.remove();done&&done();}
+
+document.getElementById("btnExport").onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="sine-acao-social.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+document.getElementById("btnImport").onclick=()=>document.getElementById("fileImport").click();
+document.getElementById("fileImport").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(d&&d.actions){migrate(d);state=d;activeTab="overview";save(true);render();}else alert("Arquivo inválido.");}catch(err){alert("Não consegui ler o arquivo.");}};r.readAsText(f);e.target.value="";};
+document.getElementById("btnReset").onclick=()=>{if(confirm("Restaurar tudo para o modelo original? Isso substitui o conteúdo para TODA a equipe.")){state=seed();activeTab="overview";save(true);render();}};
+
+function render(){
+  renderTabs();
+  const v=document.getElementById("view");v.innerHTML="";
+  if(activeTab==="overview")renderOverview(v);
+  else{const a=state.actions.find(x=>x.id===activeTab);if(a)renderAction(v,a);else{activeTab="overview";renderOverview(v);}}
+  window.scrollTo(0,0);
+}
+render();
+initSync();
+
+/* keep phone & PC in sync: refetch when tab returns to foreground + periodic poll */
+function refetchRemote(){ if(document.hidden)return; fetch(RTDB).then(r=>r.json()).then(d=>{applyRemote(d);setSync("ok","sincronizado");}).catch(()=>setSync("wait","offline (salvo local)")); }
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden){setSync("wait","atualizando…");refetchRemote();} });
+window.addEventListener("focus",refetchRemote);
+window.addEventListener("online",()=>{setSync("wait","reconectando…");refetchRemote();});
+window.addEventListener("pageshow",refetchRemote);
+setInterval(()=>{ if(!isEditing())refetchRemote(); },20000);
+</script>
