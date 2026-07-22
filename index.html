@@ -204,7 +204,7 @@
 </style>
 
 <div class="top"><div class="wrap">
-  <div class="brand"><span class="spark">✦</span><span class="w">sine</span><span class="s">moovement</span></div>
+  <div class="brand"><span class="spark">✦</span><span class="w">sine</span><span class="s">sessions</span></div>
   <div class="toolbtns">
     <span class="sync" id="sync"><span class="dot"></span><span id="syncTxt">conectando…</span></span>
     <a class="tb part" href="participar.html" target="_blank">👥 Participante</a>
@@ -255,7 +255,7 @@ function seed(){
             {id:uid(),t:"Par de meias (inverno) — R$ 2,50",d:false},
             {id:uid(),t:"Cartãozinho com mensagem/versículo — R$ 0,50",d:false}
           ]},
-          {id:uid(),type:"note",title:"Onde comprar mais barato · Maringá",text:"Sempre peça desconto ou doação dizendo que é ação social da igreja (leve algo que comprove).\n\nATACADOS — tudo num lugar (água, lanche, higiene, meias):\n• Assaí Atacadista — R. Rubens Sebastião Marin, 1820 (Pq. Industrial)\n• Atacadão — Av. Colombo, 67 (Vila Nova)\n• Max Atacadista — Av. Colombo, 2720\n• Camilo Atacadista — variedades, higiene e meias\n\nBOMBONS (Sonho de Valsa) — atacado de doces, bem mais barato:\n• Marimel Distribuidora — (44) 3026-6593\n• Doces e Festas Alvorada — Av. Pedro Taques, 2457 — (44) 3229-5469\n• Docelândia — (44) 3263-4235\n\nÁGUA / SUCO — distribuidora de bebidas (preço por fardo):\n• Distribuidora Gávea — Av. Guedner, 2495\n• Ponto Beer — Av. Colombo, 7578\n\nHIGIENE (sabonete + kit dental de viagem) e MEIAS:\n• Nos próprios atacados acima ou lojas de R$ 1,99 do centro\n• Meias baratas: atacado de vestuário / camelô do centro\n\nDica: bombom no atacado de doces e água na distribuidora saem bem abaixo do mercado. Confirme endereços e telefones antes de ir."},
+          {id:uid(),type:"note",title:"Onde comprar mais barato · Maringá",text:"Sempre peça desconto ou doação dizendo que é ação beneficente da igreja (leve algo que comprove).\n\nATACADOS — tudo num lugar (água, lanche, higiene, meias):\n• Assaí Atacadista — R. Rubens Sebastião Marin, 1820 (Pq. Industrial)\n• Atacadão — Av. Colombo, 67 (Vila Nova)\n• Max Atacadista — Av. Colombo, 2720\n• Camilo Atacadista — variedades, higiene e meias\n\nBOMBONS (Sonho de Valsa) — atacado de doces, bem mais barato:\n• Marimel Distribuidora — (44) 3026-6593\n• Doces e Festas Alvorada — Av. Pedro Taques, 2457 — (44) 3229-5469\n• Docelândia — (44) 3263-4235\n\nÁGUA / SUCO — distribuidora de bebidas (preço por fardo):\n• Distribuidora Gávea — Av. Guedner, 2495\n• Ponto Beer — Av. Colombo, 7578\n\nHIGIENE (sabonete + kit dental de viagem) e MEIAS:\n• Nos próprios atacados acima ou lojas de R$ 1,99 do centro\n• Meias baratas: atacado de vestuário / camelô do centro\n\nDica: bombom no atacado de doces e água na distribuidora saem bem abaixo do mercado. Confirme endereços e telefones antes de ir."},
           {id:uid(),type:"list",title:"Arrecadação (R$ 10/kit)",items:[
             {id:uid(),t:"Definir meta de kits e divulgar no grupo",d:false},
             {id:uid(),t:"Abrir vaquinha (Pix/dinheiro) · prazo qua 22/07",d:false},
@@ -455,9 +455,9 @@ function renderTabs(){
 /* ---------- overview ---------- */
 function renderOverview(v){
   const intro=el("div","ov-intro");
-  intro.appendChild(el("div","eyebrow","Sine Moovement · guia"));
-  intro.appendChild(el("h2","","Nossas ações"));
-  intro.appendChild(el("p","","Modelo reutilizável e o passo a passo de cada mês. Tudo é editável e sincronizado ao vivo com a equipe. A página do participante (botão no topo) mostra a versão de quem vai participar."));
+  intro.appendChild(el("div","eyebrow","Sine Sessions"));
+  intro.appendChild(el("h2","","Sine Moovement"));
+  intro.appendChild(el("p","","A frente de ação social do Sine Sessions: a parte que sai às ruas e serve. Aqui ficam as ações, com um passo a passo reutilizável que as outras frentes do Sine Sessions também podem adotar. Tudo é editável e sincronizado ao vivo; a página do participante (botão no topo) mostra a versão de quem vai participar."));
   v.appendChild(intro);
   const rh=el("div","rhythm");
   state.rhythm.forEach(r=>{
