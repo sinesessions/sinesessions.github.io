@@ -184,6 +184,7 @@
   .gph .cap{font-size:12px;color:var(--muted);padding:6px 9px;line-height:1.38}
   .gph .rm{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.62);color:#fff;border:none;width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:12px;opacity:0;line-height:1}
   .gph:hover .rm{opacity:1}
+  .gph .play{position:absolute;top:56px;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;pointer-events:none;padding-left:2px}
   .galhint{font-size:11.5px;color:var(--faint);padding:2px 12px 8px;line-height:1.45}
   @media(max-width:640px){.gal{grid-template-columns:1fr 1fr}}
 
@@ -549,7 +550,8 @@ function renderGalleryEd(a,s,sec){
   const grid=el("div","gal");
   s.photos.forEach(ph=>{
     const c=el("div","gph");
-    const im=el("img");im.src=ph.src;im.alt=ph.cap||"";im.loading="lazy";c.appendChild(im);
+    const im=el("img");im.src=ph.vid?(ph.poster||""):ph.src;im.alt=ph.cap||"";im.loading="lazy";c.appendChild(im);
+    if(ph.vid)c.appendChild(el("span","play","▶"));
     c.appendChild(editable(el("div","cap"),ph,"cap","Legenda…"));
     const rm=el("button","rm","✕");rm.title="Remover foto";
     rm.onclick=()=>{if(confirm("Remover esta foto da galeria?")){s.photos=s.photos.filter(x=>x!==ph);save();render();}};
