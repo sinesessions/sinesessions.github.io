@@ -182,13 +182,10 @@
   .gph{position:relative;border:1px solid var(--line);border-radius:11px;overflow:hidden;background:var(--panel-2)}
   .gph img{width:100%;height:112px;object-fit:cover;display:block}
   .gph .cap{font-size:12px;color:var(--muted);padding:6px 9px;line-height:1.38}
-  .gph .rm{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.62);color:#fff;border:none;width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:12px;opacity:0;line-height:1}
-  .gph:hover .rm{opacity:1}
+  .gph .rm{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.62);color:#fff;border:none;width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:12px;opacity:.92;line-height:1}
   .gph .play{position:absolute;top:56px;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;pointer-events:none;padding-left:2px}
-  .gph .star{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.62);color:#ffd34d;border:none;width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:13px;opacity:0;line-height:1}
-  .gph:hover .star{opacity:1}
+  .gph .star{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.62);color:#ffd34d;border:none;width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:14px;opacity:.92;line-height:1}
   .gph.iscover{outline:2px solid var(--lime);outline-offset:-2px}
-  .gph.iscover .star{opacity:1}
   .covertag{position:absolute;bottom:0;left:0;right:0;background:var(--lime);color:#0b0b0b;font-size:10px;font-weight:800;text-align:center;padding:2px;letter-spacing:.06em}
   .galhint{font-size:11.5px;color:var(--faint);padding:2px 12px 8px;line-height:1.45}
   @media(max-width:640px){.gal{grid-template-columns:1fr 1fr}}
@@ -595,7 +592,38 @@ function renderGalleryEd(a,s,sec){
     grid.appendChild(c);
   });
   sec.appendChild(grid);
-  if(!s.photos.length)sec.appendChild(el("div","galhint","Nenhuma mídia ainda — peça pra adicionar."));
+  if(!s.photos.length)sec.appendChild(el("div","galhint","Nenhuma mídia ainda. Toque em ＋ Foto pra adicionar do celular."));
+  const add=el("div","s-add");
+  const fileIn=el("input");fileIn.type="file";fileIn.accept="image/*";fileIn.multiple=true;fileIn.style.display="none";
+  fileIn.onchange=e=>{addGalleryPhotos(e.target.files,s);e.target.value="";};
+  const btn=mkBtn("＋ Foto",()=>fileIn.click());
+  add.appendChild(btn);add.appendChild(fileIn);
+  add.appendChild(el("span","galhint","Vídeo é só pedir (precisa comprimir)."));
+  sec.appendChild(add);
+}
+function addGalleryPhotos(files,s){
+  const arr=Array.from(files||[]).filter(f=>f.type.startsWith("image/"));
+  if(!arr.length)return;
+  s.photos=s.photos||[];
+  let pending=arr.length;
+  const done=()=>{if(--pending<=0){save(true);render();}};
+  arr.forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        const max=1200;let w=img.width,h=img.height;
+        if(w>h&&w>max){h=Math.round(h*max/w);w=max;}
+        else if(h>=w&&h>max){w=Math.round(w*max/h);h=max;}
+        const cv=document.createElement("canvas");cv.width=w;cv.height=h;
+        cv.getContext("2d").drawImage(img,0,0,w,h);
+        try{s.photos.push({id:uid(),src:cv.toDataURL("image/jpeg",0.72),cap:""});}catch(e){}
+        done();
+      };
+      img.onerror=done;img.src=reader.result;
+    };
+    reader.onerror=done;reader.readAsDataURL(file);
+  });
 }
 function renderList(a,s,sec){
   const list=el("div","items");
