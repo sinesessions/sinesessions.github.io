@@ -113,20 +113,8 @@
 
   .empty{color:var(--muted);text-align:center;padding:60px 0}
 
-  /* gallery */
-  .gallery{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .gitem{position:relative;margin:0;cursor:zoom-in;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel)}
-  .gitem img{width:100%;height:150px;object-fit:cover;display:block;transition:transform .2s}
-  .gitem:hover img{transform:scale(1.04)}
-  .gitem figcaption{font-size:12.5px;color:var(--muted);padding:8px 11px;line-height:1.42}
-  .gitem .play{position:absolute;top:75px;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;pointer-events:none;padding-left:3px}
-  @media(max-width:420px){.gitem img{height:132px}.gitem .play{top:66px}}
-  .lightbox{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;gap:14px}
-  .lightbox img,.lightbox video{max-width:100%;max-height:78vh;border-radius:10px;object-fit:contain;background:#000}
-  .lightbox .cap{color:var(--ink);font-size:14.5px;text-align:center;max-width:620px;line-height:1.5}
-  .lightbox .x{position:absolute;top:12px;right:18px;color:#fff;font-size:32px;background:none;border:none;cursor:pointer;line-height:1}
-  .lightbox .nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;font-size:26px;width:46px;height:46px;border-radius:50%;cursor:pointer}
-  .lightbox .prev{left:12px}.lightbox .next{right:12px}
+  /* cover */
+  .cover{width:100%;display:block;border-radius:16px;border:1px solid var(--line);margin-top:18px;max-height:320px;object-fit:cover}
 </style>
 
 <div class="bar"><div class="wrap">
@@ -202,6 +190,8 @@ function renderAction(a){
   if(a.meet){const mp=el("div","meetbox");mp.innerHTML='<span class="k">🚩 Ponto de encontro</span>';mp.appendChild(el("div","mv",a.meet));hero.appendChild(mp);}
   app.appendChild(hero);
 
+  if(a.cover){const cv=el("img","cover");cv.src=a.cover;cv.alt=a.title||"";cv.loading="lazy";app.appendChild(cv);}
+
   if(a.obj){const s=el("section");s.appendChild(el("h2",null,"O que é"));s.appendChild(el("p","obj",a.obj));app.appendChild(s);}
 
   // connection manifesto (fixed heart of it)
@@ -212,9 +202,6 @@ function renderAction(a){
   const p3=el("p");p3.innerHTML="Uma pessoa <b>vista</b> vale mais que mil sacolas entregues com pressa.";
   man.appendChild(p1);man.appendChild(p2);man.appendChild(p3);
   app.appendChild(man);
-
-  // galerias (registro da ação — do início ao fim)
-  (a.sections||[]).filter(s=>s.type==="gallery"&&s.photos&&s.photos.length).forEach(g=>app.appendChild(galleryEl(g)));
 
   // como vai funcionar (guide.flow)
   const g=findSection(a,"guide");
@@ -268,41 +255,6 @@ function renderAction(a){
   window.scrollTo(0,0);
 }
 
-function galleryEl(g){
-  const s=el("section");s.appendChild(el("h2",null,g.title||"Registro"));
-  const grid=el("div","gallery");
-  g.photos.forEach((ph,i)=>{
-    const fig=el("figure","gitem");
-    const im=el("img");im.src=ph.vid?(ph.poster||""):ph.src;im.alt=ph.cap||"";im.loading="lazy";fig.appendChild(im);
-    if(ph.vid)fig.appendChild(el("span","play","▶"));
-    if(ph.cap)fig.appendChild(el("figcaption",null,ph.cap));
-    fig.onclick=()=>openLightbox(g.photos,i);
-    grid.appendChild(fig);
-  });
-  s.appendChild(grid);return s;
-}
-function openLightbox(photos,idx){
-  let i=idx;
-  const box=el("div","lightbox");
-  const media=el("div","media");media.style.cssText="display:flex;align-items:center;justify-content:center;max-width:100%";
-  const cap=el("div","cap");
-  const x=el("button","x","×");
-  const prev=el("button","nav prev","‹");const next=el("button","nav next","›");
-  function show(){
-    const ph=photos[i];media.innerHTML="";
-    if(ph.vid){const v=document.createElement("video");v.src=ph.src;v.controls=true;v.autoplay=true;v.playsInline=true;v.setAttribute("playsinline","");media.appendChild(v);}
-    else{const im=el("img");im.src=ph.src;im.alt=ph.cap||"";media.appendChild(im);}
-    cap.textContent=ph.cap||"";
-  }
-  function close(){box.remove();document.removeEventListener("keydown",onkey);}
-  prev.onclick=e=>{e.stopPropagation();i=(i-1+photos.length)%photos.length;show();};
-  next.onclick=e=>{e.stopPropagation();i=(i+1)%photos.length;show();};
-  function onkey(e){if(e.key==="Escape")close();else if(e.key==="ArrowLeft")prev.onclick(e);else if(e.key==="ArrowRight")next.onclick(e);}
-  x.onclick=close;box.onclick=e=>{if(e.target===box)close();};
-  box.appendChild(media);box.appendChild(cap);box.appendChild(x);
-  if(photos.length>1){box.appendChild(prev);box.appendChild(next);}
-  document.body.appendChild(box);document.addEventListener("keydown",onkey);show();
-}
 function careBox(cls,title,items,mk){
   const box=el("div","cbox "+cls);box.appendChild(el("div","h",title));
   const ul=el("ul");items.forEach(it=>{const li=el("li");li.appendChild(el("span","mk",mk));li.appendChild(el("span",null,it.t||""));ul.appendChild(li);});
