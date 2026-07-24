@@ -185,6 +185,11 @@
   .gph .rm{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.62);color:#fff;border:none;width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:12px;opacity:0;line-height:1}
   .gph:hover .rm{opacity:1}
   .gph .play{position:absolute;top:56px;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;pointer-events:none;padding-left:2px}
+  .gph .star{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.62);color:#ffd34d;border:none;width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:13px;opacity:0;line-height:1}
+  .gph:hover .star{opacity:1}
+  .gph.iscover{outline:2px solid var(--lime);outline-offset:-2px}
+  .gph.iscover .star{opacity:1}
+  .covertag{position:absolute;bottom:0;left:0;right:0;background:var(--lime);color:#0b0b0b;font-size:10px;font-weight:800;text-align:center;padding:2px;letter-spacing:.06em}
   .galhint{font-size:11.5px;color:var(--faint);padding:2px 12px 8px;line-height:1.45}
   @media(max-width:640px){.gal{grid-template-columns:1fr 1fr}}
 
@@ -391,7 +396,8 @@ function templateAction(){
       {id:uid(),type:"list",title:"5 · Papéis",items:[{id:uid(),t:"Responsável geral: ____",d:false},{id:uid(),t:"Compras: ____",d:false},{id:uid(),t:"Registro/fotos: ____",d:false}]},
       guideBlank(),
       registroNote(),
-      {id:uid(),type:"list",title:"7 · Fechar e registrar",items:[{id:uid(),t:"Agradecer quem participou e doou",d:false},{id:uid(),t:"Registrar quantos foram alcançados",d:false},{id:uid(),t:"Partilhar um breve testemunho",d:false}]}
+      {id:uid(),type:"list",title:"7 · Fechar e registrar",items:[{id:uid(),t:"Agradecer quem participou e doou",d:false},{id:uid(),t:"Registrar quantos foram alcançados",d:false},{id:uid(),t:"Partilhar um breve testemunho",d:false}]},
+      {id:uid(),type:"gallery",title:"Galeria",photos:[]}
     ]
   };
 }
@@ -570,19 +576,26 @@ function renderSection(a,s){
 }
 function renderGalleryEd(a,s,sec){
   s.photos=s.photos||[];
-  sec.appendChild(el("div","galhint","Fotos ficam guardadas no site. Para adicionar novas, é só pedir. Aqui você edita as legendas e pode remover."));
+  sec.appendChild(el("div","galhint","Galeria geral da ação — vá juntando fotos e vídeos aqui. Para adicionar mídia nova, é só pedir. ★ = capa que aparece na página do participante."));
   const grid=el("div","gal");
   s.photos.forEach(ph=>{
-    const c=el("div","gph");
+    const iscover=a.cover&&a.cover===ph.src;
+    const c=el("div","gph"+(iscover?" iscover":""));
     const im=el("img");im.src=ph.vid?(ph.poster||""):ph.src;im.alt=ph.cap||"";im.loading="lazy";c.appendChild(im);
     if(ph.vid)c.appendChild(el("span","play","▶"));
+    const star=el("button","star",iscover?"★":"☆");star.title=ph.vid?"Vídeo não pode ser capa":"Usar como capa do participante";
+    if(ph.vid)star.style.display="none";
+    star.onclick=()=>{a.cover=(a.cover===ph.src?"":ph.src);save();render();};
+    c.appendChild(star);
     c.appendChild(editable(el("div","cap"),ph,"cap","Legenda…"));
-    const rm=el("button","rm","✕");rm.title="Remover foto";
-    rm.onclick=()=>{if(confirm("Remover esta foto da galeria?")){s.photos=s.photos.filter(x=>x!==ph);save();render();}};
-    c.appendChild(rm);grid.appendChild(c);
+    const rm=el("button","rm","✕");rm.title="Remover da galeria";
+    rm.onclick=()=>{if(confirm("Remover este item da galeria?")){if(a.cover===ph.src)a.cover="";s.photos=s.photos.filter(x=>x!==ph);save();render();}};
+    c.appendChild(rm);
+    if(iscover)c.appendChild(el("div","covertag","CAPA"));
+    grid.appendChild(c);
   });
   sec.appendChild(grid);
-  if(!s.photos.length)sec.appendChild(el("div","galhint","Nenhuma foto ainda — peça pra adicionar."));
+  if(!s.photos.length)sec.appendChild(el("div","galhint","Nenhuma mídia ainda — peça pra adicionar."));
 }
 function renderList(a,s,sec){
   const list=el("div","items");
