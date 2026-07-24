@@ -358,6 +358,29 @@ function guideBlank(){
     evite:[{id:uid(),t:"Tirar fotos sem permissão."},{id:uid(),t:"Prometer o que não pode cumprir."}]
   };
 }
+function registroNote(){
+  return {id:uid(),type:"note",title:"📸 Registro (quem estiver com o celular)",
+    text:"Combine ANTES quem é o responsável pelo registro do dia (faz parte do rodízio). Assim não fica no acaso.\n\n"+
+"QUANDO tirar — os 3 momentos:\n"+
+"• Antes: os bastidores (montando os kits, separando as roupas). É o que mais engaja.\n"+
+"• Durante: a ação acontecendo, o encontro.\n"+
+"• Depois: a foto do grupo e a roda de oração final.\n\n"+
+"O QUE capturar (mira nisso e pode parar):\n"+
+"• 1 vídeo curto do louvor / oração\n"+
+"• Bastidores da preparação\n"+
+"• 1 close de um detalhe (ex: o bilhete escrito à mão)\n"+
+"• 1 vídeo da ação acontecendo\n"+
+"• A foto do grupo no fim\n"+
+"Uns 6 a 8 registros bons valem mais que 200 fotos iguais.\n\n"+
+"CUIDADOS (o mais importante):\n"+
+"• Pessoa em situação de rua ou vulnerável: só com permissão.\n"+
+"• Prefira a cena (as mãos, o kit sendo entregue) ao rosto de quem recebe. Dignidade primeiro.\n"+
+"• Se a pessoa não quiser, respeite na hora.\n\n"+
+"DEPOIS (pra não morrer no rolo da câmera):\n"+
+"• Manda tudo no grupo do Sine Moovement no mesmo dia.\n"+
+"• A Marina passa pro time montar a galeria do site e os posts.\n"+
+"Foto guardada não serve pra nada — o destino é registrar aqui e chamar mais gente pra junto."};
+}
 function templateAction(){
   return {id:uid(),accent:"lime",date:"",title:"Nova ação",place:"",when:"",obj:"",
     sections:[
@@ -367,6 +390,7 @@ function templateAction(){
       {id:uid(),type:"list",title:"4 · Logística",items:[{id:uid(),t:"Compras (o quê, quem, onde)",d:false},{id:uid(),t:"Montagem / preparo",d:false},{id:uid(),t:"Transporte e ponto de encontro",d:false}]},
       {id:uid(),type:"list",title:"5 · Papéis",items:[{id:uid(),t:"Responsável geral: ____",d:false},{id:uid(),t:"Compras: ____",d:false},{id:uid(),t:"Registro/fotos: ____",d:false}]},
       guideBlank(),
+      registroNote(),
       {id:uid(),type:"list",title:"7 · Fechar e registrar",items:[{id:uid(),t:"Agradecer quem participou e doou",d:false},{id:uid(),t:"Registrar quantos foram alcançados",d:false},{id:uid(),t:"Partilhar um breve testemunho",d:false}]}
     ]
   };
