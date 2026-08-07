@@ -115,6 +115,7 @@
 
   /* cover */
   .cover{width:100%;display:block;border-radius:16px;border:1px solid var(--line);margin-top:18px;max-height:320px;object-fit:cover}
+  .homehero{width:100%;display:block;border-radius:16px;border:1px solid var(--line);margin:4px 0 20px}
 </style>
 
 <div class="bar"><div class="wrap">
@@ -161,7 +162,7 @@ function render(){
 
 function renderList(){
   app.innerHTML="";
-  const e=el("div","eyebrow","Sine Moovement");app.appendChild(e);
+  const hero=el("img","homehero");hero.src="/hero-sine-moovement.png";hero.alt="Sine Moovement";hero.loading="eager";app.appendChild(hero);
   const h=el("h1");h.style.fontSize="26px";h.style.marginBottom="10px";h.textContent="Vem participar com a gente";app.appendChild(h);
   app.appendChild(el("p","lead","Escolha a ação para ver como vai funcionar, a rota e os cuidados."));
   const list=el("div","clist");
